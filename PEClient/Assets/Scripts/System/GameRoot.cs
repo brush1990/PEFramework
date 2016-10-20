@@ -53,9 +53,18 @@ public class GameRoot : MonoBehaviour
 
         StartCoroutine(SwitchToLoginState());
     }
+    void Update()
+    {
+        //统一处理各个系统的Update函数
+        for (int i = 0; i < systemList.Count; i++)
+        {
+            systemList[i].SysUpdate();
+        }
+    }
 
     private IEnumerator SwitchToLoginState()
     {
+        //等待PEWindowMgr完成初始化后才开始创建核心系统，进入LoginState
         while(!PEWindowMgr.Instance.isInitDone)
         {
             yield return new WaitForSeconds(Time.deltaTime);
@@ -66,11 +75,15 @@ public class GameRoot : MonoBehaviour
 
     GameStateType curGameState = GameStateType.None;
     GameStateType dstGameState = GameStateType.None;
-    IGameState levGameState;
+    IGameState levGameState;//离开的场景，记录下来用于清理场景垃圾
     public void ChangeGameStateToTarget(GameStateType inputState)
     {
         if (curGameState == inputState) return;
 
+        if(curGameState != GameStateType.None)
+        {
+            levGameState = GetGameStateInMap(curGameState);
+        }
         if (curGameState == GameStateType.LoadingState)
         {
             //如果当前正处于loading状态
@@ -93,7 +106,7 @@ public class GameRoot : MonoBehaviour
             }
         }
 
-        IGameState dstState = GetGameState(curGameState);
+        IGameState dstState = GetGameStateInMap(curGameState);
         if (dstState != null)
         {
             dstState.Enter();
@@ -103,8 +116,9 @@ public class GameRoot : MonoBehaviour
 
     private void InitGameCoreSystems()
     {
-        //AddGameSys<ResourceSys>(systemGB.transform);
-        //AddGameSys<EventSys>(SystemGB.transform);
+        AddGameSys<ResourceSys>(SystemGB.transform);
+        AddGameSys<EventSys>(SystemGB.transform);
+        //AddGameSys<ABSys>(SystemGB.transform);
         InitAllGameSyss();
     }
 
@@ -125,7 +139,7 @@ public class GameRoot : MonoBehaviour
             systemList[i].Init();
         }
     }
-    public IGameState GetGameState(GameStateType state)
+    public IGameState GetGameStateInMap(GameStateType state)
     {
         for (int i = 0; i < gameStateList.Count; i++)
         {
@@ -151,6 +165,7 @@ public class GameRoot : MonoBehaviour
 public class ISystem : MonoBehaviour
 {
     public virtual void Init() { }
+    public virtual void SysUpdate() { }
     public string GetName()
     {
         return GetType().Name;

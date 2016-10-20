@@ -27,6 +27,7 @@ public class PEWindowMgr : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        //当有图集进行更新时，通过这里首先去加载
         StartCoroutine(InitWindowMgr());
     }
 
@@ -39,9 +40,11 @@ public class PEWindowMgr : MonoBehaviour
             Destroy(uiroot);
         }
         GameObject gb = null;
-        /*
-        gb = (GameObject)ResourceMgr.GetInstantiateAsset(, "UIRoot", RessStorgeType.RST_Always);
+        
+       
+        gb = (GameObject)ResourceMgr.GetInstantiateOB("UIRoot", ResType.UICommomType, ResCacheType.Always);
         gb.name = "UIRoot";
+        /*
         QiFunUITools.SetActive(gb, true);
         m_uiRootTrans = gb.transform;
         m_uiRootTrans.parent = transform;

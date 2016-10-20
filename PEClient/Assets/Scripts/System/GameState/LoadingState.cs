@@ -63,7 +63,7 @@ public class LoadingState : IGameState
         if (!GameRoot.isStateGBCreateDone)
         {
             Debug.Log("Create StateGB Done!");
-            GameRoot.Instance.cre
+            
         }
 
     }

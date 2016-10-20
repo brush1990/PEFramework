@@ -17,7 +17,7 @@ public class GameStart : MonoBehaviour
     ///////////////////////////MainFunctions////////////////////////////
     void Start()
     {
-
+        StartGame();
     }
 
     private void StartGame()
