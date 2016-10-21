@@ -2,7 +2,7 @@
     File      : GameRoot
 	Author    : Plane
     Version   : 1.0
-    Function  : Nothing
+    Function  : 游戏全局管理控制类
     Date      : 2016/10/19 15:56:9
     Copyright : 2016 CodeVFX Inc.
 *************************************************************/
@@ -27,7 +27,6 @@ public class GameRoot : MonoBehaviour
     private List<IGameState> gameStateList = new List<IGameState>();//存储所有的gameState
     public static bool isStateGBCreateDone = false;
     private bool mLoadSceneDone = false;
-
     //----------------------------------------------------------------//
 
     ///////////////////////////MainFunctions////////////////////////////
@@ -128,7 +127,6 @@ public class GameRoot : MonoBehaviour
             dstState.Enter();
         }
     }
-
     public void CreateAllGameStates()
     {
         //注册一些事件，如游戏暂停，切换状态回调等
@@ -147,7 +145,8 @@ public class GameRoot : MonoBehaviour
         */
 
         isStateGBCreateDone = true;
-        yield break;    }
+        yield break;
+    }
     //----------------------------------------------------------------//
 
     ///////////////////////////ToolMethonds/////////////////////////////

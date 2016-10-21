@@ -37,4 +37,10 @@ public class PEUITools
         }
         return null;
     }
+    public static T GetOrAddWindowHandle<T>(GameObject gb) where T : WindowBase
+    {
+        T t = gb.GetComponent<T>();
+        if (t == null) t = gb.AddComponent<T>();
+        return t;
+    }
 }

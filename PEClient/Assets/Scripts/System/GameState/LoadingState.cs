@@ -2,7 +2,7 @@
     File      : LoadingState
 	Author    : Plane
     Version   : 1.0
-    Function  : Nothing
+    Function  : 游戏加载状态，通过其完成各个状态的切换
     Date      : 2016/10/19 17:24:4
     Copyright : 2016 CodeVFX Inc.
 *************************************************************/

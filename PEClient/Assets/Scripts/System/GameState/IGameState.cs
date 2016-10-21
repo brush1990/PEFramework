@@ -2,7 +2,7 @@
     File      : IGameState
 	Author    : Plane
     Version   : 1.0
-    Function  : Nothing
+    Function  : ÓÎÏ·×´Ì¬¸¸Àà
     Date      : 2016/10/19 16:58:17
     Copyright : 2016 CodeVFX Inc.
 *************************************************************/

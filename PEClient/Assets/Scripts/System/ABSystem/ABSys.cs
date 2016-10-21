@@ -2,7 +2,7 @@
     File      : ABSys
 	Author    : Plane
     Version   : 1.0
-    Function  : Nothing
+    Function  : AssetBundle管理系统
     Date      : 2016/10/20 15:7:12
     Copyright : 2016 CodeVFX Inc.
 *************************************************************/

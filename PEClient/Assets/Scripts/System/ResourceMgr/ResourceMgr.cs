@@ -2,7 +2,7 @@
     File      : ResourceMgr
 	Author    : Plane
     Version   : 1.0
-    Function  : Nothing
+    Function  : 资源加载类
     Date      : 2016/10/19 15:40:55
     Copyright : 2016 CodeVFX Inc.
 *************************************************************/
