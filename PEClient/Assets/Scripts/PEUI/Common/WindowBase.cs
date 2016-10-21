@@ -8,7 +8,17 @@
 *************************************************************/
 using UnityEngine;
 
-public class WindowBase : MonoBehaviour 
+public class WindowBase : MonoBehaviour
 {
-	
+    ///////////////////////////Data Define//////////////////////////////
+    public PEWindowEnum curWindowEnum = PEWindowEnum.None;
+    public string luaWindowName = "";
+
+    //----------------------------------------------------------------//
+    public virtual void InitDic() { }
+
+    public virtual void InitWindow(bool open = true, int state = 0)
+    {
+
+    }
 }

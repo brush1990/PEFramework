@@ -85,13 +85,21 @@ public class PEWindowMgr : MonoBehaviour
         isInitDone = true;
     }
 
-    //控制UI窗口的状态
-    public void SetWindowState(PEWindowEnum windowEnum, ResType resType, ResCacheType cacheType = ResCacheType.Never)
+    //控制UI窗口的状态 open:窗口是否打开，state:状态控制参数，两者都传递到WindowBase的InitWindow()中去。
+    public void SetWindowState(PEWindowEnum windowEnum, ResType resType, string luaName = "", bool open = true, int state = 0)
     {
-
+        PWindow pwindow = new PWindow(windowEnum, luaName);
+        if (!windowDic.ContainsKey(pwindow))
+        {
+            InitWindowCache(windowEnum, resType, luaName);
+        }
+        WindowBase wb = windowDic[pwindow].windowBase;
+        wb.curWindowEnum = windowEnum;
+        wb.luaWindowName = luaName;
+        wb.InitWindow(open, state);
     }
-    //预加载窗口进缓存
-    public void InitWindowCache(PEWindowEnum windowEnum, ResType resType, ResCacheType cacheType = ResCacheType.Never,string luaName = "")
+    //预加载窗口物体进缓存
+    public void InitWindowCache(PEWindowEnum windowEnum, ResType resType, string luaName = "", ResCacheType cacheType = ResCacheType.Never)
     {        
         PWindow pwindow = new PWindow(windowEnum, luaName);
         string windowName = pwindow.windowName;
@@ -99,20 +107,24 @@ public class PEWindowMgr : MonoBehaviour
         if (!windowDic.ContainsKey(pwindow))
         {
             gb = (GameObject)ResourceMgr.GetInstantiateOB(windowName, resType, cacheType);
+            gb.name = windowName;
+            gb.transform.parent = windowRootTrans;
+            gb.transform.localPosition = Vector3.zero;
+            gb.transform.localScale = Vector3.one;
+            NGUITools.SetActive(gb, false);
+            WindowBase windowBase = gb.GetComponent<WindowBase>();
+            if (windowBase == null)
+            {
+                windowBase = GetOrAddWindowHandle(gb, windowEnum, luaName);
+                if (windowBase == null)
+                {
+                    Debug.LogError("Can not Get window Handle Scripts");
+                    return;
+                }
+            }
+            windowDic.Add(pwindow, new PWindowType(windowBase, resType, cacheType));
+            windowBase.InitDic();
         }
-        gb.name = windowName;
-        gb.transform.parent = windowRootTrans;
-        gb.transform.localPosition = Vector3.zero;
-        gb.transform.localScale = Vector3.one;
-        NGUITools.SetActive(gb, false);
-        WindowBase windowBase = gb.GetComponent<WindowBase>();
-        if (windowBase == null)
-        {
-            windowBase = GetOrAddWindowHandle(gb, windowEnum, luaName);
-        }
-
-
-
     }
     //----------------------------------------------------------------//
 
@@ -130,7 +142,6 @@ public class PEWindowMgr : MonoBehaviour
                 windowBase = PEUITools.GetOrAddWindowHandle<HandleLoginedWindow>(gb);
                 break;
             default:
-                Debug.LogError("Can not Get window Handle Scripts");
                 break;
         }
         return windowBase;
