@@ -25,9 +25,14 @@ public class IGameState : MonoBehaviour
         //TODO
         System.GC.Collect();
     }
+
     public virtual GameStateType GetStateType()
     {
         return GameStateType.None;
+    }
+    public virtual string GetName()
+    {
+        return GetType().Name;
     }
 }
 

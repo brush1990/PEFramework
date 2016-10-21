@@ -20,6 +20,10 @@ public class PEWindowMgr : MonoBehaviour
             return instance;
         }
     }
+    private Transform uiRootTrans = null;
+    private Transform windowRootTrans = null;
+    private Transform cameraRootTrans = null;
+
     public bool isInitDone = false;
     //----------------------------------------------------------------//
 
@@ -28,6 +32,7 @@ public class PEWindowMgr : MonoBehaviour
     {
         instance = this;
         //当有图集进行更新时，通过这里首先去加载
+        //TODO
         StartCoroutine(InitWindowMgr());
     }
 
@@ -39,19 +44,14 @@ public class PEWindowMgr : MonoBehaviour
         {
             Destroy(uiroot);
         }
-        GameObject gb = null;
-        
+        GameObject gb = null;        
        
         gb = (GameObject)ResourceMgr.GetInstantiateOB("UIRoot", ResType.UICommomType, ResCacheType.Always);
         gb.name = "UIRoot";
-        /*
-        QiFunUITools.SetActive(gb, true);
-        m_uiRootTrans = gb.transform;
-        m_uiRootTrans.parent = transform;
-        m_windowRootTrans = QiFunUITools.GetTrans(m_uiRootTrans, "window_root");
-        m_cameraRootTrans = QiFunUITools.GetTrans(m_uiRootTrans, "camera_root");
-        
-        */
+        uiRootTrans = gb.transform;
+        uiRootTrans.parent = transform;
+        windowRootTrans = PEUITools.GetTrans(uiRootTrans, "windowRoot");
+        cameraRootTrans = PEUITools.GetTrans(uiRootTrans, "cameraRoot");        
         isInitDone = true;
     }
 

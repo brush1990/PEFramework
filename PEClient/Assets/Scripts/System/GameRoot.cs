@@ -17,10 +17,7 @@ public class GameRoot : MonoBehaviour
     private static GameRoot instance = null;
     public static GameRoot Instance
     {
-        get
-        {
-            return instance;
-        }
+        get { return instance; }
     }
     GameObject StateGB = null;
     GameObject SystemGB = null;
@@ -29,6 +26,7 @@ public class GameRoot : MonoBehaviour
 
     private List<IGameState> gameStateList = new List<IGameState>();//存储所有的gameState
     public static bool isStateGBCreateDone = false;
+    private bool mLoadSceneDone = false;
 
     //----------------------------------------------------------------//
 
@@ -51,10 +49,22 @@ public class GameRoot : MonoBehaviour
         SystemGB.transform.parent = this.transform;
         SystemGB.transform.localPosition = Vector3.zero;
 
+        //游戏启动时需要通过Loading状态进入LoginState，所以这里先把Loading状态创建出来
+        IGameState ls = CreateGameState<LoadingState>(StateGB.transform);
+        ls.Init();
+        gameStateList.Add(ls);
+
         StartCoroutine(SwitchToLoginState());
     }
     void Update()
     {
+        //新场景加载完成后，立即切换到应的游戏状态
+        if (mLoadSceneDone)
+        {
+            ChangeGameStateToTarget(dstGameState);
+            mLoadSceneDone = false;
+        }
+
         //统一处理各个系统的Update函数
         for (int i = 0; i < systemList.Count; i++)
         {
@@ -72,7 +82,13 @@ public class GameRoot : MonoBehaviour
         InitGameCoreSystems();
         ChangeGameStateToTarget(GameStateType.LoginState);
     }
-
+    private void InitGameCoreSystems()
+    {
+        AddGameSys<ResourceSys>(SystemGB.transform);
+        AddGameSys<EventSys>(SystemGB.transform);
+        //AddGameSys<ABSys>(SystemGB.transform);
+        InitAllGameSyss();
+    }
     GameStateType curGameState = GameStateType.None;
     GameStateType dstGameState = GameStateType.None;
     IGameState levGameState;//离开的场景，记录下来用于清理场景垃圾
@@ -112,15 +128,27 @@ public class GameRoot : MonoBehaviour
             dstState.Enter();
         }
     }
-    //----------------------------------------------------------------//
 
-    private void InitGameCoreSystems()
+    public void CreateAllGameStates()
     {
-        AddGameSys<ResourceSys>(SystemGB.transform);
-        AddGameSys<EventSys>(SystemGB.transform);
-        //AddGameSys<ABSys>(SystemGB.transform);
-        InitAllGameSyss();
+        //注册一些事件，如游戏暂停，切换状态回调等
+        //TODO
+        StartCoroutine(CreateGSCoroutine());
     }
+    private IEnumerator CreateGSCoroutine()
+    {
+        IGameState gs = CreateGameState<LoginState>(StateGB.transform);
+        gs.Init();
+        gameStateList.Add(gs);
+        /*
+        gs = CreateGameState<LoadingState>(StateGB.transform);
+        gs.Init();
+        gameStateList.Add(gs);
+        */
+
+        isStateGBCreateDone = true;
+        yield break;    }
+    //----------------------------------------------------------------//
 
     ///////////////////////////ToolMethonds/////////////////////////////
     void AddGameSys<T>(Transform transform) where T : ISystem, new()
@@ -158,6 +186,18 @@ public class GameRoot : MonoBehaviour
     {
         if (levGameState != null)
             levGameState.Leave();
+    }
+    public IGameState CreateGameState<T>(Transform parent) where T : IGameState
+    {
+        GameObject go = new GameObject();
+        go.transform.parent = parent;
+        IGameState gs = go.AddComponent<T>();
+        go.name = gs.GetName();
+        return gs;
+    }
+    public void SetSceneLoadDoneFlag()
+    {
+        mLoadSceneDone = true;
     }
     //----------------------------------------------------------------//
 }

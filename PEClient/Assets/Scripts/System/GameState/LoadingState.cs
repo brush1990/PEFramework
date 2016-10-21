@@ -40,6 +40,7 @@ public class LoadingState : IGameState
     {
         //对LoginState进行相关处理，加载LoginState时不需要Loading界面
         //TODO
+
         //当目标不是LoginState并且Loading窗口没有显示出来的情况下让程序一直挂在这里等待
         while (GameRoot.Instance.GetDstGameState() != GameStateType.LoginState)
         {
@@ -62,10 +63,18 @@ public class LoadingState : IGameState
         //检测GameState结点是否已经创建了，在启动进入游戏后这里将会运行一次。
         if (!GameRoot.isStateGBCreateDone)
         {
-            Debug.Log("Create StateGB Done!");
-            
+            //Create GameStates
+            GameRoot.Instance.CreateAllGameStates();
+            //程序挂起，等待所有GameState创建并挂载完成
+            while(!GameRoot.isStateGBCreateDone)
+            {
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            Debug.Log("Create StateGB Done!");            
         }
-
+        mLoadSceneDone = true;//新场景加载完成
+        mProgressValue = 0;//进度重置为0
+        GameRoot.Instance.SetSceneLoadDoneFlag();
     }
     //----------------------------------------------------------------//
 

@@ -46,13 +46,13 @@ public class ResourceMgr : MonoBehaviour
         }
         return Instantiate(resItem.obj);
     }
-
     private static Object LoadObj(ResType resType, string resName)
     {
         //游戏包中Resources目录下的路径
         string pathRes = GetResPathByType(resType) + resName;
         //比对更新文件字典中是否存在，取得最新版本资源的路径
         string pathAB = "";//TODO
+        pathAB = pathRes;//TODEL
         if(pathRes.Equals(pathAB))
         {
             //从游戏的Resources目录中加载
@@ -70,8 +70,6 @@ public class ResourceMgr : MonoBehaviour
 
     }
     //----------------------------------------------------------------//
-
-
     
     ///////////////////////////ToolMethonds/////////////////////////////
     private static string GetResPathByType(ResType rt)
@@ -115,14 +113,12 @@ public class ResItem
         this.cacheType = cacheType;
     }
 }
-
 public enum ResCacheType
 {
     Never,   //不缓存
     Always,  //缓存
     None
 }
-
 public enum ResType
 {
     UICommomType,
