@@ -63,11 +63,7 @@ public class ResourceMgr : MonoBehaviour
             //从更新下来的AB文件中读取并实例化
             //TODO
         }
-
-        Debug.Log("Object:" + resName + "is not exit!");
         return null;
-
-
     }
     //----------------------------------------------------------------//
     

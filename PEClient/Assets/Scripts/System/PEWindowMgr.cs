@@ -70,12 +70,8 @@ public class PEWindowMgr : MonoBehaviour
     {
         yield return new WaitForSeconds(Time.deltaTime);
         var uiroot = GameObject.Find("UIRoot");
-        if (uiroot != null)
-        {
-            Destroy(uiroot);
-        }
-        GameObject gb = null;        
-       
+        if (uiroot != null) Destroy(uiroot);
+        GameObject gb = null;               
         gb = (GameObject)ResourceMgr.GetInstantiateOB("UIRoot", ResType.UICommomType, ResCacheType.Always);
         gb.name = "UIRoot";
         uiRootTrans = gb.transform;
@@ -118,7 +114,7 @@ public class PEWindowMgr : MonoBehaviour
                 windowBase = GetOrAddWindowHandle(gb, windowEnum, luaName);
                 if (windowBase == null)
                 {
-                    Debug.LogError("Can not Get window Handle Scripts");
+                    Debug.LogError("Can not Get " + windowName + " Handle Scripts");
                     return;
                 }
             }

@@ -15,7 +15,7 @@ public class LoginState : IGameState
     
     public override void Enter()
     {
-        Debug.Log("flag");
+        StartCoroutine(LoginCoroutine());
     }
 
     private IEnumerator LoginCoroutine()
@@ -34,6 +34,7 @@ public class LoginState : IGameState
         mProgressValue = 0;
         //显示登录界面，预加载登录完成界面
         PEWindowMgr.Instance.SetWindowState(PEWindowEnum.Login_window, ResType.UICommomType);
+        PEWindowMgr.Instance.InitWindowCache(PEWindowEnum.Logined_window, ResType.UICommomType);
 
     }
     //----------------------------------------------------------------//
